@@ -16,12 +16,14 @@ runner:
 persistence:
   work:
     size: "${RUNNER_WORK_VOLUME_REQUESTS_STORAGE}"
-    accessModes: "ReadWriteOnce"
+    accessModes:
+      - "ReadWriteOnce"
     volume:
       size: "${RUNNER_WORK_VOLUME_CAPACITY_STORAGE}"
   db:
     size: "${RUNNER_DB_VOLUME_REQUESTS_STORAGE}"
-    accessModes: "ReadWriteOnce"
+    accessModes:
+      - "ReadWriteOnce"
     volume:
       size: "${RUNNER_DB_VOLUME_CAPACITY_STORAGE}"
 
