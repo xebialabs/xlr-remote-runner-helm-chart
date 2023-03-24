@@ -118,6 +118,12 @@ spec:
               value: {{ .Values.runner.capabilities }}
             - name: RELEASE_RUNNER_KUBERNETES_NAMESPACE
               value: {{ include "names.namespace" . | quote }}
+            - name: RELEASE_RUNNER_KUBERNETES_RUNNER_PERSISTENT_VOLUME_CLAIM_NAME
+            {{- if .Values.persistence.enabled }}
+              value: "job-runner-work-${release.runner.name}"
+            {{- else if .Values.persistence.work.existingClaim }}
+              value: {{ .Values.persistence.work.existingClaim }}
+            {{- end }}
             - name: SPRING_PROFILES_ACTIVE
               value: "{{ .Values.runner.activeProfiles }}"
             - name: JDK_JAVA_OPTIONS
