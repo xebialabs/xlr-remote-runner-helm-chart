@@ -13,12 +13,18 @@ To install the chart with the release name `my-release`:
 
 ```console
 helm repo add my-repo https://charts.bitnami.com/bitnami
-helm install my-release . --values values-custom-example.yaml
+helm install my-release .  -n remote-runner --values values-custom-example.yaml
 ```
 
 ### Minimal configuration for the AWS cluster
 
-```yaml
+Create values file with correct release configuration:
+- update the `release.url`
+- update the `release.registrationToken`
+- update the global storage class with the correct AWS EFS based storage class
+
+```shell
+cat <<EOF > ./values-custom-aws.yaml
 global:
   persistence:
     storageClass: aws-efs
@@ -28,11 +34,26 @@ release:
   registrationToken: rpa_...
 
 replicaCount: 2
+EOF
 ```
+
+Run helm release `my-release` installation with creation of the namespace:
+```shell
+helm repo add my-repo https://charts.bitnami.com/bitnami
+helm dependency update .
+helm install my-release . -n remote-runner --create-namespace --values ./values-custom-aws.yaml
+```
+
+On finish of the last command you will see information about helm release.
 
 ### Minimal configuration for the k3d cluster
 
-```yaml
+Create values file with correct release configuration:
+- update the `release.url`
+- update the `release.registrationToken`
+
+```shell
+cat <<EOF > ./values-custom-local.yaml
 global:
   persistence:
     baseHostPath: /kube
@@ -53,17 +74,41 @@ replicaCount: 2
 resources:
   limits:
     cpu: 3
+EOF
+```
+
+Run helm release `my-release` installation with creation of the namespace:
+```shell
+helm repo add my-repo https://charts.bitnami.com/bitnami
+helm dependency update .
+helm install my-release . -n remote-runner --create-namespace --values ./values-custom-local.yaml
+```
+
+On finish of the last command you will see information about helm release.
+
+### Cloud connector template generation
+
+```shell
+helm repo add my-repo https://charts.bitnami.com/bitnami
+helm dependency update .
+helm template my-release . -n remote-runner --values ./values-cloud-connector.yaml > remote-runner.yaml
+helm template my-release . -n remote-runner --values ./values-cloud-connector.yaml --values persistence.work.volume.create=true > remote-runner.yaml
 ```
 
 ## Uninstalling the Chart
 
 To uninstall/delete the `my-release` deployment:
 
-```console
-helm delete my-release
+```shell
+helm uninstall my-release -n remote-runner
 ```
-
 The command removes all the Kubernetes components associated with the chart and deletes the release.
+Uninstalling the chart will not remove the PVCs, you need to delete them manually.
+
+To delete all resources with one command (if in the namespace is only remote-runner installed) you can delete namespace with:
+```shell
+kubectl delete namespace remote-runner
+```
 
 ## Parameters
 
