@@ -33,9 +33,9 @@ runner:
   remoteDebug: false
   ## @param runner.jdkRemoteDebug when enabled remote debugging use the specified configuration
   jdkRemoteDebug: "-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005"
-  ## @param runner.truststore
+  ## @param runner.truststore the truststore base64 encoded value
   truststore:
-  ## @param runner.truststorePassword
+  ## @param runner.truststorePassword the truststore password
   truststorePassword:
   ## @param runner.config [object] Map configuration variables that are set in the config map and used as environment
   config:

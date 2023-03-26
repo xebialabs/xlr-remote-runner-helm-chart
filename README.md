@@ -12,7 +12,8 @@
 To install the chart with the release name `my-release`:
 
 ```console
-helm repo add my-repo https://charts.bitnami.com/bitnami
+helm repo add bitnami-repo https://charts.bitnami.com/bitnami
+helm dependency update .
 helm install my-release .  -n remote-runner --values values-custom-example.yaml
 ```
 
@@ -39,7 +40,7 @@ EOF
 
 Run helm release `my-release` installation with creation of the namespace:
 ```shell
-helm repo add my-repo https://charts.bitnami.com/bitnami
+helm repo add bitnami-repo https://charts.bitnami.com/bitnami
 helm dependency update .
 helm install my-release . -n remote-runner --create-namespace --values ./values-custom-aws.yaml
 ```
@@ -79,7 +80,7 @@ EOF
 
 Run helm release `my-release` installation with creation of the namespace:
 ```shell
-helm repo add my-repo https://charts.bitnami.com/bitnami
+helm repo add bitnami-repo https://charts.bitnami.com/bitnami
 helm dependency update .
 helm install my-release . -n remote-runner --create-namespace --values ./values-custom-local.yaml
 ```
@@ -89,7 +90,7 @@ On finish of the last command you will see information about helm release.
 ### Cloud connector template generation
 
 ```shell
-helm repo add my-repo https://charts.bitnami.com/bitnami
+helm repo add bitnami-repo https://charts.bitnami.com/bitnami
 helm dependency update .
 helm template my-release . -n remote-runner --values ./values-cloud-connector.yaml > remote-runner.yaml
 helm template my-release . -n remote-runner --values ./values-cloud-connector.yaml --values persistence.work.volume.create=true > remote-runner.yaml
@@ -129,8 +130,8 @@ kubectl delete namespace remote-runner
 | `runner.jdkJavaOptions`     | Java options for the Remote Runner Java runtime                                    | `-XX:+UseParallelGC -XX:+ShowCodeDetailsInExceptionMessages -XshowSettings:vm -Dh2.bindAddress=localhost` |
 | `runner.remoteDebug`        | enable remote debugging                                                            | `false`                                                                                                   |
 | `runner.jdkRemoteDebug`     | when enabled remote debugging use the specified configuration                      | `-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005`                                    |
-| `runner.truststore`         |                                                                                    | `nil`                                                                                                     |
-| `runner.truststorePassword` |                                                                                    | `nil`                                                                                                     |
+| `runner.truststore`         | the truststore base64 encoded value                                                | `nil`                                                                                                     |
+| `runner.truststorePassword` | the truststore password                                                            | `nil`                                                                                                     |
 | `runner.config`             | Map configuration variables that are set in the config map and used as environment | `{}`                                                                                                      |
 
 ### Digital.ai Release parameters
