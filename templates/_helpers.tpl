@@ -2,8 +2,8 @@
 Allow the release namespace to be overridden for multi-namespace deployments in combined charts.
 */}}
 {{- define "names.namespace" -}}
-{{- if and .Values.namespace.create .Values.namespace.namespaceOverride -}}
-{{- .Values.namespace.namespaceOverride -}}
+{{- if and .Values.namespace.create .Values.namespaceOverride -}}
+{{- .Values.namespaceOverride -}}
 {{- else -}}
 {{- .Release.Namespace -}}
 {{- end -}}

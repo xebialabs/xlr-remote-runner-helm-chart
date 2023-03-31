@@ -33,9 +33,9 @@ image:
   name: "${AGENT_IMAGE_xlr-remote-runner}"
   tag:
 
+namespaceOverride: "${DAI_NAMESPACE}"
 namespace:
   create: true
-  namespaceOverride:
   annotations:
     agents.digitalai.cloud/id: "${DAI_AGENT_ID}"
 

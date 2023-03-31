@@ -93,7 +93,7 @@ On finish of the last command you will see information about helm release.
 helm repo add bitnami-repo https://charts.bitnami.com/bitnami
 helm dependency update .
 helm template my-release . -n remote-runner --values ./values-cloud-connector.yaml > remote-runner.yaml
-helm template my-release . -n remote-runner --values ./values-cloud-connector.yaml --values persistence.work.volume.create=true > remote-runner.yaml
+helm template my-release . -n remote-runner --values ./values-cloud-connector.yaml --set persistence.work.volume.create=true > remote-runner.yaml
 ```
 
 ## Uninstalling the Chart
@@ -178,18 +178,18 @@ kubectl delete namespace remote-runner
 
 ### Common parameters
 
-| Name                          | Description                                                                             | Value          |
-| ----------------------------- | --------------------------------------------------------------------------------------- | -------------- |
-| `nameOverride`                | String to partially override release.fullname template (will maintain the release name) | `""`           |
-| `fullnameOverride`            | String to fully override release.fullname template                                      | `""`           |
-| `commonAnnotations`           | Annotations to add to all deployed objects                                              | `{}`           |
-| `commonLabels`                | Labels to add to all deployed objects                                                   | `{}`           |
-| `namespace.create`            | enable creation in the custom namespace                                                 | `false`        |
-| `namespace.namespaceOverride` | String to fully override namespace                                                      | `nil`          |
-| `namespace.annotations`       | Annotations to add to all namespace resource                                            | `{}`           |
-| `diagnosticMode.enabled`      | Enable diagnostic mode (all probes will be disabled and the command will be overridden) | `false`        |
-| `diagnosticMode.command`      | Command to override all containers in the deployment                                    | `["sleep"]`    |
-| `diagnosticMode.args`         | Args to override all containers in the deployment                                       | `["infinity"]` |
+| Name                     | Description                                                                             | Value          |
+|--------------------------|-----------------------------------------------------------------------------------------|----------------|
+| `nameOverride`           | String to partially override release.fullname template (will maintain the release name) | `""`           |
+| `fullnameOverride`       | String to fully override release.fullname template                                      | `""`           |
+| `commonAnnotations`      | Annotations to add to all deployed objects                                              | `{}`           |
+| `commonLabels`           | Labels to add to all deployed objects                                                   | `{}`           |
+| `namespaceOverride`      | String to fully override namespace                                                      | `nil`          |
+| `namespace.create`       | enable creation in the custom namespace                                                 | `false`        |
+| `namespace.annotations`  | Annotations to add to all namespace resource                                            | `{}`           |
+| `diagnosticMode.enabled` | Enable diagnostic mode (all probes will be disabled and the command will be overridden) | `false`        |
+| `diagnosticMode.command` | Command to override all containers in the deployment                                    | `["sleep"]`    |
+| `diagnosticMode.args`    | Args to override all containers in the deployment                                       | `["infinity"]` |
 
 ### Statefulset parameters
 

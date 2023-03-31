@@ -196,13 +196,13 @@ commonAnnotations: { }
 commonLabels: { }
 ## Enable creation and installation in the custom namespace
 ##
+## @param namespaceOverride String to fully override namespace
+##
+namespaceOverride:
 namespace:
   ## @param namespace.create enable creation in the custom namespace
   ##
   create: false
-  ## @param namespace.namespaceOverride String to fully override namespace
-  ##
-  namespaceOverride:
   ## @param namespace.annotations Annotations to add to all namespace resource
   ##
   annotations: { }
