@@ -152,6 +152,24 @@ spec:
             - secretRef:
                 name: {{ include "common.tplvalues.render" (dict "value" .Values.extraEnvVarsSecret "context" $) }}
             {{- end }}
+          {{- if not .Values.diagnosticMode.enabled }}
+          {{- if .Values.health.enabled }}
+          livenessProbe:
+            httpGet:
+              path: /actuator/health/liveness
+              port: 8080
+            initialDelaySeconds: {{ .Values.health.probesLivenessTimeout }}
+            periodSeconds: {{ .Values.health.periodScans }}
+            failureThreshold: {{ .Values.health.probeFailureThreshold }}
+          readinessProbe:
+            httpGet:
+              path: /actuator/health/readiness
+              port: 8080
+            initialDelaySeconds: {{ .Values.health.probesReadinessTimeout }}
+            periodSeconds: {{ .Values.health.periodScans }}
+            failureThreshold: {{ .Values.health.probeFailureThreshold }}
+          {{- end }}
+          {{- end }}
           {{- if .Values.resources }}
           resources: {{- toYaml .Values.resources | nindent 12 }}
           {{- end }}
