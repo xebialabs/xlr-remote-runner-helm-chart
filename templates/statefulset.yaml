@@ -82,6 +82,31 @@ spec:
         - name: {{ . }}
         {{- end }}
       {{- end }}
+      {{- if or .Values.global.persistence.createVolume .Values.persistence.work.volume.create .Values.persistence.db.volume.create }}
+      initContainers:
+        - name: set-volume-permissions
+          image: {{ include "images.image" (dict "imageRoot" .Values.image) }}
+          command:
+            - sh
+            - -c
+            {{- if or .Values.global.persistence.createVolume .Values.persistence.work.volume.create }}
+            - chmod -R 777 /workspace/work
+            {{- end }}
+            {{- if or .Values.global.persistence.createVolume .Values.persistence.db.volume.create }}
+            - chmod -R 777 /workspace/db
+            {{- end }}
+          imagePullPolicy: IfNotPresent
+          volumeMounts:                 
+            - mountPath: /workspace/work
+              name: job-runner-work
+              readOnly: false
+            - mountPath: /workspace/db
+              name: job-runner-db
+              readOnly: false
+          securityContext:
+              privileged: true
+              runAsUser: 0
+      {{- end }}
       containers:
         - name: remote-runner
           image: {{ include "images.image" (dict "imageRoot" .Values.image) }}
