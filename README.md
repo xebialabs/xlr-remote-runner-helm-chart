@@ -5,7 +5,7 @@
 
 - Kubernetes 1.19+
 - Helm 3.2.0+
-- ReadWriteMany volumes for deployment scaling
+- ReadWriteMany volumes for deployment scaling (it can be ReadWriteOnly for local development)
 
 ## Installing the Chart
 
@@ -65,10 +65,10 @@ release:
 
 persistence:
   work:
+    accessModes:
+      - ReadWriteOnce
     volume:
       create: true
-      accessModes:
-        - ReadWriteOnce
 
 replicaCount: 2
 
