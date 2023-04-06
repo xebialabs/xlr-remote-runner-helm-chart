@@ -96,7 +96,7 @@ spec:
             - chmod -R 777 /workspace/db
             {{- end }}
           imagePullPolicy: IfNotPresent
-          volumeMounts:                 
+          volumeMounts:
             - mountPath: /workspace/work
               name: job-runner-work
               readOnly: false
@@ -178,7 +178,7 @@ spec:
                 name: {{ include "common.tplvalues.render" (dict "value" .Values.extraEnvVarsSecret "context" $) }}
             {{- end }}
           {{- if not .Values.diagnosticMode.enabled }}
-          {{- if .Values.health.enabled }}
+          {{- if and .Values.health.enabled (not .Values.hostNetwork) }}
           livenessProbe:
             httpGet:
               path: /actuator/health/liveness
