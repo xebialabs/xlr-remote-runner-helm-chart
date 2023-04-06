@@ -310,6 +310,8 @@ topologySpreadConstraints: [ ]
 ## Remote Runner pods' Security Context
 ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/#set-the-security-context-for-a-pod
 ## @param podSecurityContext.enabled Enable Remote Runner pods' Security Context
+## @param podSecurityContext.runAsUser Set Remote Runner pod's Security Context runAsUser
+## @param podSecurityContext.runAsGroup Set Remote Runner pod's Security Context runAsGroup
 ## @param podSecurityContext.fsGroup Set Remote Runner pod's Security Context fsGroup
 ##
 podSecurityContext:

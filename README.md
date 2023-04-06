@@ -173,13 +173,13 @@ kubectl delete namespace remote-runner
 | `image.registry`    | Remote runner image registry                                                                        | `docker.io`         |
 | `image.repository`  | runner image repository                                                                             | `xebialabs`         |
 | `image.name`        | Remote runner image name                                                                            | `xlr-remote-runner` |
-| `image.tag`         | Remote runner image tag                                                                             | `0.1.32`            |
+| `image.tag`         | Remote runner image tag                                                                             | `0.1.33`            |
 | `image.pullSecrets` | Optionally specify an array of imagePullSecrets (secrets must be manually created in the namespace) | `[]`                |
 
 ### Common parameters
 
 | Name                     | Description                                                                             | Value          |
-|--------------------------|-----------------------------------------------------------------------------------------|----------------|
+| ------------------------ | --------------------------------------------------------------------------------------- | -------------- |
 | `nameOverride`           | String to partially override release.fullname template (will maintain the release name) | `""`           |
 | `fullnameOverride`       | String to fully override release.fullname template                                      | `""`           |
 | `commonAnnotations`      | Annotations to add to all deployed objects                                              | `{}`           |
@@ -193,45 +193,52 @@ kubectl delete namespace remote-runner
 
 ### Statefulset parameters
 
-| Name                                    | Description                                                                                                              | Value                     |
-| --------------------------------------- | ------------------------------------------------------------------------------------------------------------------------ | ------------------------- |
-| `schedulerName`                         | Use an alternate scheduler, e.g. "stork".                                                                                | `""`                      |
-| `podManagementPolicy`                   | Pod management policy                                                                                                    | `Parallel`                |
-| `podLabels`                             | Remote Runner Pod labels. Evaluated as a template                                                                        | `{}`                      |
-| `podAnnotations`                        | Remote Runner Pod annotations. Evaluated as a template                                                                   | `{}`                      |
-| `replicaCount`                          | Number of Remote Runner replicas to deploy                                                                               | `1`                       |
-| `updateStrategy.type`                   | Update strategy type for Remote Runner statefulset                                                                       | `RollingUpdate`           |
-| `statefulsetLabels`                     | Remote Runner statefulset labels. Evaluated as a template                                                                | `{}`                      |
-| `priorityClassName`                     | Name of the priority class to be used by Remote Runner pods, priority class needs to be created beforehand               | `""`                      |
-| `podAffinityPreset`                     | Pod affinity preset. Ignored if `affinity` is set. Allowed values: `soft` or `hard`                                      | `""`                      |
-| `podAntiAffinityPreset`                 | Pod anti-affinity preset. Ignored if `affinity` is set. Allowed values: `soft` or `hard`                                 | `soft`                    |
-| `nodeAffinityPreset.type`               | Node affinity preset type. Ignored if `affinity` is set. Allowed values: `soft` or `hard`                                | `""`                      |
-| `nodeAffinityPreset.key`                | Node label key to match Ignored if `affinity` is set.                                                                    | `""`                      |
-| `nodeAffinityPreset.values`             | Node label values to match. Ignored if `affinity` is set.                                                                | `[]`                      |
-| `affinity`                              | Affinity for pod assignment. Evaluated as a template                                                                     | `{}`                      |
-| `nodeSelector`                          | Node labels for pod assignment. Evaluated as a template                                                                  | `{}`                      |
-| `tolerations`                           | Tolerations for pod assignment. Evaluated as a template                                                                  | `[]`                      |
-| `topologySpreadConstraints`             | Topology Spread Constraints for pod assignment spread across your cluster among failure-domains. Evaluated as a template | `[]`                      |
-| `podSecurityContext.enabled`            | Enable Remote Runner pods' Security Context                                                                              | `false`                   |
-| `podSecurityContext.fsGroup`            | Set Remote Runner pod's Security Context fsGroup                                                                         | `1001`                    |
-| `containerSecurityContext.enabled`      | Enabled Remote Runner containers' Security Context                                                                       | `false`                   |
-| `containerSecurityContext.runAsUser`    | Set Remote Runner containers' Security Context runAsUser                                                                 | `1001`                    |
-| `containerSecurityContext.runAsNonRoot` | Set Remote Runner container's Security Context runAsNonRoot                                                              | `true`                    |
-| `extraVolumeMounts`                     | Optionally specify extra list of additional volumeMounts                                                                 | `[]`                      |
-| `extraVolumes`                          | Optionally specify extra list of additional volumes .                                                                    | `[]`                      |
-| `hostAliases`                           | Deployment pod host aliases                                                                                              | `[]`                      |
-| `dnsPolicy`                             | DNS Policy for pod                                                                                                       | `ClusterFirstWithHostNet` |
-| `hostNetwork`                           | allows a pod to use the node network namespace.                                                                          | `true`                    |
-| `dnsConfig`                             | DNS Configuration pod                                                                                                    | `{}`                      |
-| `command`                               | Override default container command (useful when using custom images)                                                     | `nil`                     |
-| `args`                                  | Override default container args (useful when using custom images)                                                        | `nil`                     |
-| `lifecycleHooks`                        | Overwrite livecycle for the Remote Runner container(s) to automate configuration before or after startup                 | `{}`                      |
-| `terminationGracePeriodSeconds`         | Default duration in seconds k8s waits for container to exit before sending kill signal.                                  | `200`                     |
-| `extraEnvVars`                          | Extra environment variables to add to Remote Runner pods                                                                 | `[]`                      |
-| `extraEnvVarsCM`                        | Name of existing ConfigMap containing extra environment variables                                                        | `""`                      |
-| `extraEnvVarsSecret`                    | Name of existing Secret containing extra environment variables (in case of sensitive data)                               | `""`                      |
-| `resources.limits`                      | The resources limits for Remote Runner containers                                                                        | `{}`                      |
-| `resources.requests`                    | The requested resources for Remote Runner containers                                                                     | `{}`                      |
+| Name                                    | Description                                                                                                                              | Value           |
+| --------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------- | --------------- |
+| `schedulerName`                         | Use an alternate scheduler, e.g. "stork".                                                                                                | `""`            |
+| `podManagementPolicy`                   | Pod management policy                                                                                                                    | `Parallel`      |
+| `podLabels`                             | Remote Runner Pod labels. Evaluated as a template                                                                                        | `{}`            |
+| `podAnnotations`                        | Remote Runner Pod annotations. Evaluated as a template                                                                                   | `{}`            |
+| `replicaCount`                          | Number of Remote Runner replicas to deploy                                                                                               | `1`             |
+| `updateStrategy.type`                   | Update strategy type for Remote Runner statefulset                                                                                       | `RollingUpdate` |
+| `statefulsetLabels`                     | Remote Runner statefulset labels. Evaluated as a template                                                                                | `{}`            |
+| `priorityClassName`                     | Name of the priority class to be used by Remote Runner pods, priority class needs to be created beforehand                               | `""`            |
+| `podAffinityPreset`                     | Pod affinity preset. Ignored if `affinity` is set. Allowed values: `soft` or `hard`                                                      | `""`            |
+| `podAntiAffinityPreset`                 | Pod anti-affinity preset. Ignored if `affinity` is set. Allowed values: `soft` or `hard`                                                 | `soft`          |
+| `nodeAffinityPreset.type`               | Node affinity preset type. Ignored if `affinity` is set. Allowed values: `soft` or `hard`                                                | `""`            |
+| `nodeAffinityPreset.key`                | Node label key to match Ignored if `affinity` is set.                                                                                    | `""`            |
+| `nodeAffinityPreset.values`             | Node label values to match. Ignored if `affinity` is set.                                                                                | `[]`            |
+| `affinity`                              | Affinity for pod assignment. Evaluated as a template                                                                                     | `{}`            |
+| `nodeSelector`                          | Node labels for pod assignment. Evaluated as a template                                                                                  | `{}`            |
+| `tolerations`                           | Tolerations for pod assignment. Evaluated as a template                                                                                  | `[]`            |
+| `topologySpreadConstraints`             | Topology Spread Constraints for pod assignment spread across your cluster among failure-domains. Evaluated as a template                 | `[]`            |
+| `podSecurityContext.enabled`            | Enable Remote Runner pods' Security Context                                                                                              | `false`         |
+| `podSecurityContext.runAsUser`          | Set Remote Runner pod's Security Context runAsUser                                                                                       | `1001`          |
+| `podSecurityContext.runAsGroup`         | Set Remote Runner pod's Security Context runAsGroup                                                                                      | `1001`          |
+| `podSecurityContext.fsGroup`            | Set Remote Runner pod's Security Context fsGroup                                                                                         | `1001`          |
+| `containerSecurityContext.enabled`      | Enabled Remote Runner containers' Security Context                                                                                       | `false`         |
+| `containerSecurityContext.runAsUser`    | Set Remote Runner containers' Security Context runAsUser                                                                                 | `1001`          |
+| `containerSecurityContext.runAsNonRoot` | Set Remote Runner container's Security Context runAsNonRoot                                                                              | `true`          |
+| `extraVolumeMounts`                     | Optionally specify extra list of additional volumeMounts                                                                                 | `[]`            |
+| `extraVolumes`                          | Optionally specify extra list of additional volumes .                                                                                    | `[]`            |
+| `hostAliases`                           | Deployment pod host aliases                                                                                                              | `[]`            |
+| `dnsPolicy`                             | DNS Policy for pod                                                                                                                       | `ClusterFirst`  |
+| `hostNetwork`                           | allows a pod to use the node network namespace. If enabled health monitoring will be disabled because of port conflict on the same node. | `false`         |
+| `dnsConfig`                             | DNS Configuration pod                                                                                                                    | `{}`            |
+| `command`                               | Override default container command (useful when using custom images)                                                                     | `nil`           |
+| `args`                                  | Override default container args (useful when using custom images)                                                                        | `nil`           |
+| `lifecycleHooks`                        | Overwrite livecycle for the Remote Runner container(s) to automate configuration before or after startup                                 | `{}`            |
+| `terminationGracePeriodSeconds`         | Default duration in seconds k8s waits for container to exit before sending kill signal.                                                  | `200`           |
+| `extraEnvVars`                          | Extra environment variables to add to Remote Runner pods                                                                                 | `[]`            |
+| `extraEnvVarsCM`                        | Name of existing ConfigMap containing extra environment variables                                                                        | `""`            |
+| `extraEnvVarsSecret`                    | Name of existing Secret containing extra environment variables (in case of sensitive data)                                               | `""`            |
+| `health.enabled`                        | Enable health monitoring with readiness and liveness probes based on the remote runner actuator management endpoints                     | `true`          |
+| `health.periodScans`                    | Defines how frequently the probe will be executed after the initial delay.                                                               | `5`             |
+| `health.probeFailureThreshold`          | Instructs Kubernetes to retry the probe this many times after a failure is first recorded.                                               | `12`            |
+| `health.probesLivenessTimeout`          | Set a delay between the time the container starts and the first time the probe is executed.                                              | `10`            |
+| `health.probesReadinessTimeout`         | Set a delay between the time the container starts and the first time the probe is executed.                                              | `10`            |
+| `resources.limits`                      | The resources limits for Remote Runner containers                                                                                        | `{}`            |
+| `resources.requests`                    | The requested resources for Remote Runner containers                                                                                     | `{}`            |
 
 ### RBAC parameters
 
