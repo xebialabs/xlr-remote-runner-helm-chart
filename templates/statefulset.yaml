@@ -149,6 +149,10 @@ spec:
             {{- else if .Values.persistence.work.existingClaim }}
               value: {{ .Values.persistence.work.existingClaim }}
             {{- end }}
+            {{- if .Values.hostNetwork }}
+            - name: SERVER_PORT
+              value: "0"
+            {{- end }}
             - name: SPRING_PROFILES_ACTIVE
               value: "{{ .Values.runner.activeProfiles }}"
             - name: JDK_JAVA_OPTIONS
