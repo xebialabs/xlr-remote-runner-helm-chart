@@ -168,7 +168,7 @@ image:
   ## @param image.name Remote runner image name
   name: xlr-remote-runner
   ## @param image.tag Remote runner image tag
-  tag: 0.1.32
+  tag: 0.1.33
   ## @param image.pullSecrets Optionally specify an array of imagePullSecrets (secrets must be manually created in the namespace)
   ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/
   ## Example to create a secret:
@@ -310,10 +310,14 @@ topologySpreadConstraints: [ ]
 ## Remote Runner pods' Security Context
 ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/#set-the-security-context-for-a-pod
 ## @param podSecurityContext.enabled Enable Remote Runner pods' Security Context
+## @param podSecurityContext.runAsUser Set Remote Runner pod's Security Context runAsUser
+## @param podSecurityContext.runAsGroup Set Remote Runner pod's Security Context runAsGroup
 ## @param podSecurityContext.fsGroup Set Remote Runner pod's Security Context fsGroup
 ##
 podSecurityContext:
   enabled: false
+  runAsUser: 1001
+  runAsGroup: 1001
   fsGroup: 1001
 
 ## @param containerSecurityContext.enabled Enabled Remote Runner containers' Security Context
@@ -356,9 +360,9 @@ hostAliases: []
 ## ref: https://kubernetes.io/docs/concepts/services-networking/dns-pod-service/
 ## E.g.
 ## dnsPolicy: ClusterFirst
-dnsPolicy: "ClusterFirstWithHostNet"
-## @param hostNetwork allows a pod to use the node network namespace.
-hostNetwork: true
+dnsPolicy: "ClusterFirst"
+## @param hostNetwork allows a pod to use the node network namespace. If enabled health monitoring will be disabled because of port conflict on the same node.
+hostNetwork: false
 ## @param dnsConfig DNS Configuration pod
 ## ref: https://kubernetes.io/docs/concepts/services-networking/dns-pod-service/
 ## E.g.
@@ -395,6 +399,17 @@ extraEnvVarsCM: ""
 ##
 extraEnvVarsSecret: ""
 
+health:
+  ## @param health.enabled Enable health monitoring with readiness and liveness probes based on the remote runner actuator management endpoints
+  enabled: true
+  ## @param health.periodScans Defines how frequently the probe will be executed after the initial delay.
+  periodScans: 5
+  ## @param health.probeFailureThreshold Instructs Kubernetes to retry the probe this many times after a failure is first recorded.
+  probeFailureThreshold: 12
+  ## @param health.probesLivenessTimeout Set a delay between the time the container starts and the first time the probe is executed.
+  probesLivenessTimeout: 10
+  ## @param health.probesReadinessTimeout Set a delay between the time the container starts and the first time the probe is executed.
+  probesReadinessTimeout: 10
 
 ## Remote Runner containers' resource requests and limits
 ## ref: https://kubernetes.io/docs/user-guide/compute-resources/

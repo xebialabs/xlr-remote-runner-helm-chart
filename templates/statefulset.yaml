@@ -82,6 +82,31 @@ spec:
         - name: {{ . }}
         {{- end }}
       {{- end }}
+      {{- if or .Values.global.persistence.createVolume .Values.persistence.work.volume.create .Values.persistence.db.volume.create }}
+      initContainers:
+        - name: set-volume-permissions
+          image: {{ include "images.image" (dict "imageRoot" .Values.image) }}
+          command:
+            - sh
+            - -c
+            {{- if or .Values.global.persistence.createVolume .Values.persistence.work.volume.create }}
+            - chmod -R 777 /workspace/work
+            {{- end }}
+            {{- if or .Values.global.persistence.createVolume .Values.persistence.db.volume.create }}
+            - chmod -R 777 /workspace/db
+            {{- end }}
+          imagePullPolicy: IfNotPresent
+          volumeMounts:
+            - mountPath: /workspace/work
+              name: job-runner-work
+              readOnly: false
+            - mountPath: /workspace/db
+              name: job-runner-db
+              readOnly: false
+          securityContext:
+              privileged: true
+              runAsUser: 0
+      {{- end }}
       containers:
         - name: remote-runner
           image: {{ include "images.image" (dict "imageRoot" .Values.image) }}
@@ -124,6 +149,10 @@ spec:
             {{- else if .Values.persistence.work.existingClaim }}
               value: {{ .Values.persistence.work.existingClaim }}
             {{- end }}
+            {{- if .Values.hostNetwork }}
+            - name: SERVER_PORT
+              value: "0"
+            {{- end }}
             - name: SPRING_PROFILES_ACTIVE
               value: "{{ .Values.runner.activeProfiles }}"
             - name: JDK_JAVA_OPTIONS
@@ -152,6 +181,24 @@ spec:
             - secretRef:
                 name: {{ include "common.tplvalues.render" (dict "value" .Values.extraEnvVarsSecret "context" $) }}
             {{- end }}
+          {{- if not .Values.diagnosticMode.enabled }}
+          {{- if and .Values.health.enabled (not .Values.hostNetwork) }}
+          livenessProbe:
+            httpGet:
+              path: /actuator/health/liveness
+              port: 8080
+            initialDelaySeconds: {{ .Values.health.probesLivenessTimeout }}
+            periodSeconds: {{ .Values.health.periodScans }}
+            failureThreshold: {{ .Values.health.probeFailureThreshold }}
+          readinessProbe:
+            httpGet:
+              path: /actuator/health/readiness
+              port: 8080
+            initialDelaySeconds: {{ .Values.health.probesReadinessTimeout }}
+            periodSeconds: {{ .Values.health.periodScans }}
+            failureThreshold: {{ .Values.health.probeFailureThreshold }}
+          {{- end }}
+          {{- end }}
           {{- if .Values.resources }}
           resources: {{- toYaml .Values.resources | nindent 12 }}
           {{- end }}

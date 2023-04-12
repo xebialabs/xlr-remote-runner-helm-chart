@@ -6,6 +6,7 @@
 {{- $annotations := .Values.commonAnnotations -}}
 {{- $resourceName := include "common.names.fullname" . -}}
 {{- $namespace := include "names.namespace" . | quote -}}
+{{- $namespaceNotQuoted := include "names.namespace" . -}}
 {{- $values := . -}}
 {{- range $index := $replicas -}}
 {{- if or $global.persistence.createVolume $persistence.work.volume.create }}
@@ -31,7 +32,7 @@ spec:
     - {{ . | quote }}
     {{- end }}
   hostPath:
-    path: "{{ required "Use --set persistence.work.volume.baseHostPath=<value> or --set global.persistence.baseHostPath=<value> to define remote-runner host path" (default $global.persistence.baseHostPath $persistence.work.volume.baseHostPath) }}/work"
+    path: "{{ required "Use --set persistence.work.volume.baseHostPath=<value> or --set global.persistence.baseHostPath=<value> to define remote-runner host path" (default $global.persistence.baseHostPath $persistence.work.volume.baseHostPath) }}/work/{{ $namespaceNotQuoted }}/{{ $resourceName }}/{{ $index }}"
   persistentVolumeReclaimPolicy: Retain
   claimRef:
     name: job-runner-work-{{ $resourceName }}-{{ $index }}
@@ -60,7 +61,7 @@ spec:
     - {{ . | quote }}
     {{- end }}
   hostPath:
-    path: "{{ required "Use --set persistence.db.volume.baseHostPath=<value> or --set global.persistence.baseHostPath=<value> to define remote-runner host path" (default $global.persistence.baseHostPath $persistence.db.volume.baseHostPath) }}/db"
+    path: "{{ required "Use --set persistence.db.volume.baseHostPath=<value> or --set global.persistence.baseHostPath=<value> to define remote-runner host path" (default $global.persistence.baseHostPath $persistence.db.volume.baseHostPath) }}/db/{{ $namespaceNotQuoted }}/{{ $resourceName }}/{{ $index }}"
   persistentVolumeReclaimPolicy: Retain
   claimRef:
     name: job-runner-db-{{ $resourceName }}-{{ $index }}

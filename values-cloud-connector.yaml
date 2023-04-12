@@ -40,6 +40,7 @@ namespace:
     agents.digitalai.cloud/id: "${DAI_AGENT_ID}"
 
 dnsPolicy: Default
+hostNetwork: true
 
 resources:
   requests:
