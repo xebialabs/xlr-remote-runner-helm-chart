@@ -1,0 +1,37 @@
+name: Publish Helm Chart (Github)
+
+on:
+  workflow_dispatch:
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Chart Checkout
+        uses: actions/checkout@v3
+      - name: Helm Installation
+        uses: azure/setup-helm@v1.1
+        with:
+          version: v3.7.0
+      - name: Helm Repository Checkout
+        uses: actions/checkout@v3
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 0
+          persist-credentials: true
+          ref: master
+      - name: Helm Package (Github)
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          CHART_VERSION=$(helm show chart . | grep "^version:" | awk '$1 { print $2 }')
+          helm package . --version "$CHART_VERSION" -d helm
+          helm repo index . 
+          git config --global user.email "${{ github.actor }}@users.noreply.github.com"
+          git config --global user.name "${{ github.actor }}"
+          CHART_PACKAGE_NAME="remote-runner-$CHART_VERSION"
+          git add "helm/$CHART_PACKAGE_NAME.tgz"
+          git add index.yaml
+          git commit -m "publish $CHART_PACKAGE_NAME"
+          git push origin master
+
