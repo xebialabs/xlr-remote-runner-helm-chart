@@ -35,4 +35,4 @@ jobs:
           helm package . --version "$CHART_VERSION" -d helm
           helm repo index .
           echo ${{ env.GITHUB_TOKEN }} | helm registry login ${{ env.GCR_IMAGE }} --username ${{ github.repository_owner }} --password-stdin
-          helm push helm/remote-runner-$CHART_VERSION.tgz oci://${{ env.GCR_IMAGE }}:${{ github.sha }}
+          helm push helm/remote-runner-$CHART_VERSION.tgz oci://${{ env.GCR_IMAGE }}
