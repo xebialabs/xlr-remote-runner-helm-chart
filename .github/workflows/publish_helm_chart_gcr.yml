@@ -1,7 +1,8 @@
 name: Publish Helm Chart (Github)
 
 on:
-  push:
+  release:
+    types: [released, prereleased]
 
 jobs:
   publish:
