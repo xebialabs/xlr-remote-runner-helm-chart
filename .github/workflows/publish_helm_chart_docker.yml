@@ -1,7 +1,7 @@
 name: Publish Helm Chart (Github)
 
 on:
-  workflow_dispatch:
+  push:
 
 jobs:
   publish:
@@ -24,8 +24,9 @@ jobs:
         env:
           # experimental feature
           HELM_EXPERIMENTAL_OCI: 1
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          GCR_IMAGE: ghcr.io/${{ github.repository_owner }}/xlr-remote-runner-helm-chart
+          XEBIALABS_DOCKER_HUB_USER: ${{ secrets.XEBIALABS_DOCKER_HUB_USER }}
+          XEBIALABS_DOCKER_HUB_PASSWORD: ${{ secrets.XEBIALABS_DOCKER_HUB_PASSWORD }}
+          DH_IMAGE: registry-1.docker.io/xebialabsunsupported/xlr-remote-runner-helm-chart
         run: |
           CHART_VERSION=$(helm show chart . | grep "^version:" | awk '$1 { print $2 }')
           CHART_PACKAGE_NAME="xlr-remote-runner-helm-chart-$CHART_VERSION"
@@ -34,5 +35,5 @@ jobs:
           helm dependency update
           helm package . --version "$CHART_VERSION" -d helm
           helm repo index .
-          echo ${{ env.GITHUB_TOKEN }} | helm registry login ${{ env.GCR_IMAGE }} --username ${{ github.repository_owner }} --password-stdin
-          helm push helm/$CHART_PACKAGE_NAME.tgz oci://${{ env.GCR_IMAGE }}
+          echo ${{ env.XEBIALABS_DOCKER_HUB_PASSWORD }} | helm registry login ${{ env.DH_IMAGE }} --username ${{ XEBIALABS_DOCKER_HUB_USER }} --password-stdin
+          helm push helm/$CHART_PACKAGE_NAME.tgz oci://${{ env.DH_IMAGE }}
