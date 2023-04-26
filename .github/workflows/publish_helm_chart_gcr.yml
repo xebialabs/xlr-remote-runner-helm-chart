@@ -1,4 +1,4 @@
-name: Publish Helm Chart (Github)
+name: Publish Helm Chart (GCR)
 
 on:
   release:
