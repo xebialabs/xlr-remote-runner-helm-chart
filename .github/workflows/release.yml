@@ -49,3 +49,12 @@ jobs:
           asset_path: build/${{ env.CHART_PACKAGE_NAME }}.tgz
           asset_name: ${{ env.CHART_PACKAGE_NAME }}.tgz
           asset_content_type: application/gzip
+      - name: Generate Index
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          helm repo index ./build --merge ./build/index.yaml --url ${{ github.event.release.upload_url }}
+          mv ./build/index.yaml ./
+          git add index.yaml
+          git commit -m "release $CHART_PACKAGE_NAME"
+          git push origin master
