@@ -1,7 +1,8 @@
-name: Publish Helm Chart (Nexus)
+name: Publish Helm Chart (Github)
 
 on:
-  workflow_dispatch:
+  release:
+    types: [released, prereleased]
 
 jobs:
   publish:
@@ -20,16 +21,18 @@ jobs:
           fetch-depth: 0
           persist-credentials: true
           ref: master
-      - name: Helm Package
+      - name: Helm Package (GCR)
+        env:
+          # experimental feature
+          HELM_EXPERIMENTAL_OCI: 1
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GCR_IMAGE: ghcr.io/${{ github.repository_owner }}/xlr-remote-runner-helm-chart
         run: |
           CHART_VERSION=$(helm show chart . | grep "^version:" | awk '$1 { print $2 }')
+          CHART_PACKAGE_NAME="remote-runner-$CHART_VERSION"
           helm repo add bitnami https://charts.bitnami.com/bitnami
           helm repo update
           helm dependency update
           helm package . --version "$CHART_VERSION" -d build
-          echo "chart_version=$CHART_VERSION" >> $GITHUB_ENV
-      - name: Helm Publish (Nexus)
-        run: |
-          curl -k -u ${{ secrets.DAI_AGENT_CONTRIB_USER }}:${{ secrets.DAI_AGENT_CONTRIB_PASSWORD }} \
-          https://nexus.usw2mgt.dev.digitalai.cloud/repository/helm-development/ \
-          --upload-file build/remote-runner-${{ env.chart_version }}.tgz -v
+          echo ${{ env.GITHUB_TOKEN }} | helm registry login ${{ env.GCR_IMAGE }} --username ${{ github.repository_owner }} --password-stdin
+          helm push build/$CHART_PACKAGE_NAME.tgz oci://${{ env.GCR_IMAGE }}

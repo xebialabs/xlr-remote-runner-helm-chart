@@ -4,6 +4,7 @@
 .DS_Store
 # Common VCS dirs
 .git/
+.github/
 .gitignore
 .bzr/
 .bzrignore
@@ -25,3 +26,5 @@
 # Other
 values-custom-*.yaml
 index.yaml
+build/
+helm/
