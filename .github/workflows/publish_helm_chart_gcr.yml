@@ -25,7 +25,7 @@ jobs:
           # experimental feature
           HELM_EXPERIMENTAL_OCI: 1
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          GCR_IMAGE: https://ghcr.io/${{ github.repository_owner }}/remote-runner
+          GCR_IMAGE: ghcr.io/${{ github.repository_owner }}/remote-runner
         run: |
           CHART_VERSION=$(helm show chart . | grep "^version:" | awk '$1 { print $2 }')
           CHART_PACKAGE_NAME="remote-runner-$CHART_VERSION"
@@ -35,4 +35,4 @@ jobs:
           helm package . --version "$CHART_VERSION" -d helm
           helm repo index .
           echo ${{ env.GITHUB_TOKEN }} | helm registry login ${{ env.GCR_IMAGE }} --username ${{ github.repository_owner }} --password-stdin
-          helm push helm/remote-runner-$CHART_VERSION.tgz ${{ env.GCR_IMAGE }}:${{ github.sha }}
+          helm push helm/remote-runner-$CHART_VERSION.tgz oci://${{ env.GCR_IMAGE }}:${{ github.sha }}
