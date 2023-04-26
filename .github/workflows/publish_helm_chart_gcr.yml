@@ -32,7 +32,7 @@ jobs:
           helm repo add bitnami https://charts.bitnami.com/bitnami
           helm repo update
           helm dependency update
-          helm package . --version "$CHART_VERSION" -d helm
+          helm package . --version "$CHART_VERSION" -d build
           helm repo index .
           echo ${{ env.GITHUB_TOKEN }} | helm registry login ${{ env.GCR_IMAGE }} --username ${{ github.repository_owner }} --password-stdin
-          helm push helm/$CHART_PACKAGE_NAME.tgz oci://${{ env.GCR_IMAGE }}
+          helm push build/$CHART_PACKAGE_NAME.tgz oci://${{ env.GCR_IMAGE }}

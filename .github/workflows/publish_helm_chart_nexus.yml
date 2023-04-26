@@ -26,10 +26,10 @@ jobs:
           helm repo add bitnami https://charts.bitnami.com/bitnami
           helm repo update
           helm dependency update
-          helm package . --version "$CHART_VERSION" -d helm
+          helm package . --version "$CHART_VERSION" -d build
           echo "chart_version=$CHART_VERSION" >> $GITHUB_ENV
       - name: Helm Publish (Nexus)
         run: |
           curl -k -u ${{ secrets.DAI_AGENT_CONTRIB_USER }}:${{ secrets.DAI_AGENT_CONTRIB_PASSWORD }} \
           https://nexus.usw2mgt.dev.digitalai.cloud/repository/helm-development/ \
-          --upload-file helm/remote-runner-${{ env.chart_version }}.tgz -v
+          --upload-file build/remote-runner-${{ env.chart_version }}.tgz -v
