@@ -2,7 +2,6 @@ name: Publish Helm Chart (Github)
 
 on:
   push:
-  pull_request:
 
 jobs:
   publish:
@@ -23,6 +22,8 @@ jobs:
           ref: master
       - name: Helm Package (GCR)
         env:
+          # experimental feature
+          HELM_EXPERIMENTAL_OCI: 1
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GCR_IMAGE: ghcr.io/${{ github.repository_owner }}/remote-runner
         run: |
