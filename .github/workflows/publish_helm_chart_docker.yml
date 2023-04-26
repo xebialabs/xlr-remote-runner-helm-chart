@@ -26,7 +26,7 @@ jobs:
           HELM_EXPERIMENTAL_OCI: 1
           XEBIALABS_DOCKER_HUB_USER: ${{ secrets.XEBIALABS_DOCKER_HUB_USER }}
           XEBIALABS_DOCKER_HUB_PASSWORD: ${{ secrets.XEBIALABS_DOCKER_HUB_PASSWORD }}
-          DH_IMAGE: registry-1.docker.io/xebialabs/xlr-remote-runner-helm-chart
+          DH_IMAGE: registry-1.docker.io/xebialabsunsupported/xlr-remote-runner-helm-chart
         run: |
           CHART_VERSION=$(helm show chart . | grep "^version:" | awk '$1 { print $2 }')
           CHART_PACKAGE_NAME="remote-runner-$CHART_VERSION"
