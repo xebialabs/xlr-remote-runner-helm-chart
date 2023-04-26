@@ -33,6 +33,7 @@ jobs:
           helm repo add bitnami https://charts.bitnami.com/bitnami
           helm repo update
           helm dependency update
+          echo ${{ env.XEBIALABS_DOCKER_HUB_USER }}
           helm package . --version "$CHART_VERSION" -d build
           echo ${{ env.XEBIALABS_DOCKER_HUB_PASSWORD }} | helm registry login ${{ env.DH_IMAGE }} --username ${{ env.XEBIALABS_DOCKER_HUB_USER }} --password-stdin
           helm push build/$CHART_PACKAGE_NAME.tgz oci://${{ env.DH_IMAGE }}
