@@ -35,5 +35,5 @@ jobs:
           helm dependency update
           helm package . --version "$CHART_VERSION" -d helm
           helm repo index .
-          echo ${{ env.XEBIALABS_DOCKER_HUB_PASSWORD }} | helm registry login ${{ env.DH_IMAGE }} --username ${{ XEBIALABS_DOCKER_HUB_USER }} --password-stdin
+          echo ${{ env.XEBIALABS_DOCKER_HUB_PASSWORD }} | helm registry login ${{ env.DH_IMAGE }} --username ${{ env.XEBIALABS_DOCKER_HUB_USER }} --password-stdin
           helm push helm/$CHART_PACKAGE_NAME.tgz oci://${{ env.DH_IMAGE }}
