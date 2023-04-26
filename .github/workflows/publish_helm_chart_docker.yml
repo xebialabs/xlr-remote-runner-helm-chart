@@ -29,7 +29,7 @@ jobs:
           DH_IMAGE: registry-1.docker.io/xebialabsunsupported/xlr-remote-runner-helm-chart
         run: |
           CHART_VERSION=$(helm show chart . | grep "^version:" | awk '$1 { print $2 }')
-          CHART_PACKAGE_NAME="xlr-remote-runner-helm-chart-$CHART_VERSION"
+          CHART_PACKAGE_NAME="remote-runner-$CHART_VERSION"
           helm repo add bitnami https://charts.bitnami.com/bitnami
           helm repo update
           helm dependency update
