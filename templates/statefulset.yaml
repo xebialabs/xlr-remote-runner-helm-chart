@@ -157,10 +157,14 @@ spec:
               value: "{{ .Values.runner.activeProfiles }}"
             - name: JDK_JAVA_OPTIONS
               value: {{ .Values.runner.jdkJavaOptions }} {{- if .Values.runner.remoteDebug }} {{ .Values.runner.jdkRemoteDebug}} {{- end }}
+            {{- if .Values.runner.selfSignedCertificateEnabled }}
+            - name: RELEASE_RUNNER_REST_CLIENT_SELF_SIGNED_CERTIFICATE_ENABLED
+              value: "{{ .Values.runner.selfSignedCertificateEnabled }}"
+            {{- end}}
             {{- if .Values.runner.truststore }}
-            - name: RELEASE_RUNNER_REST_CLIENT_TRUSTSTORE
+            - name: RELEASE_RUNNER_REST_CLIENT_TRUST_STORE
               value: "file:/workspace/truststore.p12"
-            - name: RELEASE_RUNNER_REST_CLIENT_TRUSTSTORE_PASSWORD
+            - name: RELEASE_RUNNER_REST_CLIENT_TRUST_STORE_PASSWORD
               valueFrom:
                 secretKeyRef:
                   name: {{ include "common.names.fullname" . }}-truststore
